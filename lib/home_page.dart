@@ -4,6 +4,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:video_player/video_info.dart';
 
 import 'colors.dart';
 
@@ -19,6 +21,7 @@ class _HomePageState extends State<HomePage> {
   _initData() {
     DefaultAssetBundle.of(context).loadString('json/info.json').then((value) {
       info = json.decode(value);
+      setState(() {});
     });
   }
 
@@ -86,10 +89,15 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SizedBox(width: 5.w),
-                Icon(
-                  Icons.arrow_forward,
-                  size: 18.h,
-                  color: AppColor.homePageTitle,
+                InkWell(
+                  onTap: () {
+                    Get.to(() => VideoInfo());
+                  },
+                  child: Icon(
+                    Icons.arrow_forward,
+                    size: 18.h,
+                    color: AppColor.homePageTitle,
+                  ),
                 ),
               ],
             ),
