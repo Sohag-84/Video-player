@@ -15,17 +15,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-        designSize: Size(360, 690),
-        builder: (context, child) {
-          return MaterialApp(
-            title: 'Video player',
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-              useMaterial3: true,
-            ),
-            home: HomePage(),
-          );
-        });
+      designSize: Size(360, 690),
+      builder: (context, child) {
+        return MaterialApp(
+          title: 'Video player',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),
+          home: HomePage(),
+        );
+      },
+    );
   }
 }

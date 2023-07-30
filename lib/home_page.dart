@@ -1,5 +1,7 @@
 // ignore_for_file: avoid_unnecessary_containers, prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -13,6 +15,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List info = [];
+  _initData() {
+    DefaultAssetBundle.of(context).loadString('json/info.json').then((value) {
+      info = json.decode(value);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -176,7 +191,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Container(
-              height: 150.h,
+              height: 130.h,
               width: MediaQuery.sizeOf(context).width,
               margin: EdgeInsets.only(top: 20.h),
               child: Stack(
@@ -206,7 +221,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   Container(
                     width: MediaQuery.sizeOf(context).width,
-                    margin: EdgeInsets.only(right: 200.w, bottom: 40.h),
+                    margin: EdgeInsets.only(right: 200.w, bottom: 20.h),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20.r),
                       image: DecorationImage(
@@ -245,6 +260,110 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Text(
+                "Area of focus",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w500,
+                  color: AppColor.homePageTitle,
+                ),
+              ),
+            ),
+            Expanded(
+              child: OverflowBox(
+                maxWidth: MediaQuery.of(context).size.width,
+                child: MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: ListView.builder(
+                    itemCount: info.length.toDouble() ~/ 2,
+                    itemBuilder: (context, index) {
+                      int a = 2 * index;
+                      int b = 2 * index + 1;
+                      return Row(
+                        children: [
+                          Container(
+                            width: (MediaQuery.sizeOf(context).width - 90) / 2,
+                            height: 135.h,
+                            padding: EdgeInsets.only(bottom: 2.h),
+                            margin: EdgeInsets.only(
+                                left: 30, bottom: 15.h, top: 15.h),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15.r),
+                              image: DecorationImage(
+                                image: AssetImage(
+                                  info[a]['img'],
+                                ),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 3.r,
+                                  offset: Offset(-5, -5),
+                                  color:
+                                      AppColor.gradientSecond.withOpacity(0.1),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Text(
+                                  info[a]['title'],
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    color: AppColor.homePageDetail,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 135.h,
+                            width: (MediaQuery.sizeOf(context).width - 90) / 2,
+                            padding: EdgeInsets.only(bottom: 2.h),
+                            margin: EdgeInsets.only(
+                                left: 30, bottom: 15.h, top: 15.h),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(15.r),
+                              image: DecorationImage(
+                                image: AssetImage(
+                                  info[b]['img'],
+                                ),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  blurRadius: 3.r,
+                                  offset: Offset(-5, -5),
+                                  color:
+                                      AppColor.gradientSecond.withOpacity(0.1),
+                                ),
+                              ],
+                            ),
+                            child: Center(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Text(
+                                  info[b]['title'],
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    color: AppColor.homePageDetail,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
           ],
