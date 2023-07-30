@@ -321,7 +321,14 @@ class _VideoInfoState extends State<VideoInfo> {
             ),
           ),
           IconButton(
-            onPressed: () async {},
+            onPressed: () async {
+              final index = _isPlayingIndex + 1;
+              if (index <= videoInfo.length - 1) {
+                _initializedVideo(index);
+              } else {
+                Get.snackbar("Video", "No more video to play");
+              }
+            },
             icon: Icon(
               Icons.fast_forward,
               size: 36,
