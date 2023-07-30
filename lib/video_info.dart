@@ -278,6 +278,12 @@ class _VideoInfoState extends State<VideoInfo> {
 
   /// for video controller button
   Widget _controlView(BuildContext context) {
+    /// first check controller exits or not
+    /// then check controller value
+    /// then check controller volume
+    /// controller volume exits means video plays loudly
+    final noMute = (_controller!.value.volume ?? 0) > 0;
+
     return Container(
       height: 70.h,
       width: MediaQuery.sizeOf(context).width,
@@ -285,6 +291,35 @@ class _VideoInfoState extends State<VideoInfo> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          InkWell(
+            onTap: () {
+              if (noMute) {
+                _controller!.setVolume(0);
+              } else {
+                _controller!.setVolume(1);
+              }
+              setState(() {});
+            },
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0.0, 0.0),
+                      blurRadius: 4.r,
+                      color: Color.fromARGB(50, 0, 0, 0),
+                    ),
+                  ],
+                ),
+                child: Icon(
+                  noMute ? Icons.volume_up : Icons.volume_off,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
           IconButton(
             onPressed: () async {
               final index = _isPlayingIndex - 1;
