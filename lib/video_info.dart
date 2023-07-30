@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, unused_field, avoid_single_cascade_in_expression_statements
+// ignore_for_file: prefer_const_constructors, unused_field, avoid_single_cascade_in_expression_statements, prefer_is_empty
 
 import 'dart:convert';
 
@@ -20,6 +20,8 @@ class _VideoInfoState extends State<VideoInfo> {
   List videoInfo = [];
   bool _playArea = false;
   bool _isPlaying = false;
+  bool _disposed = false;
+  int _isPlayingIndex = -1;
 
   VideoPlayerController? _controller;
 
@@ -36,6 +38,15 @@ class _VideoInfoState extends State<VideoInfo> {
   void initState() {
     super.initState();
     _initData();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _disposed = true;
+    _controller!.pause();
+    _controller!.dispose();
+    _controller = null;
   }
 
   @override
@@ -265,6 +276,7 @@ class _VideoInfoState extends State<VideoInfo> {
     );
   }
 
+  /// for video controller button
   Widget _controlView(BuildContext context) {
     return Container(
       height: 70.h,
@@ -274,7 +286,14 @@ class _VideoInfoState extends State<VideoInfo> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            onPressed: () async {},
+            onPressed: () async {
+              final index = _isPlayingIndex - 1;
+              if (index >= 0 && videoInfo.length >= 0) {
+                _initializedVideo(index);
+              } else {
+                Get.snackbar("Video", "No more video to play");
+              }
+            },
             icon: Icon(
               Icons.fast_rewind,
               size: 36,
@@ -338,7 +357,21 @@ class _VideoInfoState extends State<VideoInfo> {
     }
   }
 
+  var _onUpdateControllerTime;
   void _onControllerUpdate() async {
+    ///if user wants to try to play video frequently
+    if (_disposed) {
+      return;
+    }
+    _onUpdateControllerTime = 0;
+    final now = DateTime.now().microsecondsSinceEpoch;
+    if (_onUpdateControllerTime > now) {
+      return;
+    }
+    _onUpdateControllerTime = now + 500;
+
+    /// -------------condition stop----------------- ///
+
     final controller = _controller;
     if (controller == null) {
       debugPrint("Controller is null");
@@ -357,10 +390,27 @@ class _VideoInfoState extends State<VideoInfo> {
     final controller = VideoPlayerController.networkUrl(
       Uri.parse(videoInfo[index]['videoUrl']),
     );
+    final oldController = _controller;
     _controller = controller;
+    if (oldController != null) {
+      oldController.removeListener(
+        () {
+          _onControllerUpdate();
+          oldController.pause();
+        },
+      );
+    }
     setState(() {});
     controller
       ..initialize().then((_) {
+        ///if old controller exist we dispose it
+        ///old controller exist means already video playing
+        oldController!.dispose();
+
+        ///to track video index
+        _isPlayingIndex = index;
+
+        ///to playing video and update controller value
         controller.addListener(() {
           _onControllerUpdate();
         });
