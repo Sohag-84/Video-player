@@ -291,7 +291,25 @@ class _VideoInfoState extends State<VideoInfo> {
               if (index >= 0 && videoInfo.length >= 0) {
                 _initializedVideo(index);
               } else {
-                Get.snackbar("Video", "No more video to play");
+                Get.snackbar(
+                  "Video",
+                  "",
+                  snackPosition: SnackPosition.BOTTOM,
+                  icon: Icon(
+                    Icons.face,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: AppColor.gradientSecond,
+                  colorText: Colors.white,
+                  messageText: Text(
+                    "No ahead videos in the  playlist",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                );
               }
             },
             icon: Icon(
@@ -326,7 +344,25 @@ class _VideoInfoState extends State<VideoInfo> {
               if (index <= videoInfo.length - 1) {
                 _initializedVideo(index);
               } else {
-                Get.snackbar("Video", "No more video to play");
+                Get.snackbar(
+                  "Video",
+                  "",
+                  snackPosition: SnackPosition.BOTTOM,
+                  icon: Icon(
+                    Icons.face,
+                    size: 30,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: AppColor.gradientSecond,
+                  colorText: Colors.white,
+                  messageText: Text(
+                    "You have finished watching all the videos. Congrats !",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                    ),
+                  ),
+                );
               }
             },
             icon: Icon(
